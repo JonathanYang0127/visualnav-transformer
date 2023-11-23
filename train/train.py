@@ -1,4 +1,7 @@
 import os
+os.environ['WANDB_API_KEY'] = '6bc5ed6cff29e874c30c04f4a29faae7ae603964'
+os.environ['WANDB_ENTITY'] = 'jyang27'
+os.environ["WANDB__SERVICE_WAIT"] = "10000"
 import wandb
 import argparse
 import numpy as np
@@ -34,6 +37,9 @@ from vint_train.training.train_eval_loop import (
     train_eval_loop_nomad,
     load_model,
 )
+
+from omnimimic.data.dataset import *
+from omnimimic.data.data_splits import DATASET_SPLITS, VERSION_DICT
 
 
 def main(config):
@@ -143,6 +149,39 @@ def main(config):
             num_workers=0,
             drop_last=False,
         )
+    
+
+    if config['use_rlds']:
+        TFDS_DATA_DIR = '/iris/u/jyang27/rlds_data'
+        datasets = ['gnm_dataset']
+        image_size=(64, 64)
+        train_dataloaders, val_dataloaders, val_metadata = [], [], []
+        train_dataloader_names = []
+        dataloader_config = {'wrist_image_only': False,
+              'seq_length': 5,
+              'context_size': 1,
+              'visualize': True,
+              'no_normalization': True,
+              'image_size': image_size,
+              'discrete': False,
+              'num_bins': 0}
+        with tf.device('/cpu'):
+            for dataset in datasets:
+                train_split='train'#[:95%]'
+                for version in VERSION_DICT.get(dataset, [None]):
+                    train_dataloader, _ = make_dataloader(dataset, train_split, dataloader_config,
+                        data_dir=TFDS_DATA_DIR, version=version)
+                    train_dataloaders.append(train_dataloader)
+                    train_dataloader_names.append(dataset)
+            
+            sample_weights = [DATASET_SPLITS[d] for d in train_dataloader_names]
+            print(sample_weights)
+            sample_weights /= tf.reduce_sum(sample_weights)
+            train_dataloader = tf.data.Dataset.sample_from_datasets(
+                train_dataloaders, sample_weights)
+            train_dataloader = shuffle_batch_and_prefetch_dataloader(train_dataloader,
+                 config['batch_size'], shuffle_size=10000)
+            train_loader = RLDSTorchDataset(train_dataloader.as_numpy_iterator())    
 
     # Create the model
     if config["model_type"] == "gnm":
@@ -361,6 +400,11 @@ if __name__ == "__main__":
         type=str,
         help="Path to the config file in train_config folder",
     )
+    parser.add_argument(
+        "--use-rlds",
+        action='store_true',
+        default=False
+    )
     args = parser.parse_args()
 
     with open("config/defaults.yaml", "r") as f:
@@ -373,6 +417,7 @@ if __name__ == "__main__":
 
     config.update(user_config)
 
+    config['use_rlds'] = args.use_rlds
     config["run_name"] += "_" + time.strftime("%Y_%m_%d_%H_%M_%S")
     config["project_folder"] = os.path.join(
         "logs", config["project_name"], config["run_name"]
@@ -388,7 +433,7 @@ if __name__ == "__main__":
         wandb.init(
             project=config["project_name"],
             settings=wandb.Settings(start_method="fork"),
-            entity="gnmv2", # TODO: change this to your wandb entity
+            entity="jyang27", # TODO: change this to your wandb entity
         )
         wandb.save(args.config, policy="now")  # save the config file
         wandb.run.name = config["run_name"]
@@ -396,5 +441,4 @@ if __name__ == "__main__":
         if wandb.run:
             wandb.config.update(config)
 
-    print(config)
     main(config)

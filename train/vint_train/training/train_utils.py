@@ -228,7 +228,7 @@ def train(
         loggers["action_orien_cos_sim"] = action_orien_cos_sim_logger
         loggers["multi_action_orien_cos_sim"] = multi_action_orien_cos_sim_logger
 
-    num_batches = len(dataloader)
+    num_batches = min(len(dataloader), 1000)
     tqdm_iter = tqdm.tqdm(
         dataloader,
         disable=not use_tqdm,
@@ -245,7 +245,8 @@ def train(
             dataset_index,
             action_mask,
         ) = data
-
+        if i >= num_batches:
+            break
         obs_images = torch.split(obs_image, 3, dim=1)
         viz_obs_image = TF.resize(obs_images[-1], VISUALIZATION_IMAGE_SIZE)
         obs_images = [transform(obs_image).to(device) for obs_image in obs_images]
@@ -362,7 +363,7 @@ def evaluate(
         loggers["action_orien_cos_sim"] = action_orien_cos_sim_logger
         loggers["multi_action_orien_cos_sim"] = multi_action_orien_cos_sim_logger
 
-    num_batches = len(dataloader)
+    num_batches = min(len(dataloader), 1000)
     num_batches = max(int(num_batches * eval_fraction), 1)
 
     viz_obs_image = None
@@ -384,7 +385,8 @@ def evaluate(
                 dataset_index,
                 action_mask,
             ) = data
-
+            if i >= num_batches:
+                break
             obs_images = torch.split(obs_image, 3, dim=1)
             viz_obs_image = TF.resize(obs_images[-1], VISUALIZATION_IMAGE_SIZE)
             obs_images = [transform(obs_image).to(device) for obs_image in obs_images]
