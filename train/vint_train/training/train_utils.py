@@ -32,6 +32,11 @@ ACTION_STATS = {}
 for key in data_config['action_stats']:
     ACTION_STATS[key] = np.array(data_config['action_stats'][key])
 
+def extract_waypoint(action):
+    waypoint = np.concatenate((-action[:, :, 2:3],
+                action[:, :, 1:2]), dim=-1)
+    return waypoint
+
 # Train utils for ViNT and GNM
 def _compute_losses(
     dist_label: torch.Tensor,
@@ -228,7 +233,8 @@ def train(
         loggers["action_orien_cos_sim"] = action_orien_cos_sim_logger
         loggers["multi_action_orien_cos_sim"] = multi_action_orien_cos_sim_logger
 
-    num_batches = min(len(dataloader), 1000)
+    num_batches = len(dataloader)
+    print(num_batches)
     tqdm_iter = tqdm.tqdm(
         dataloader,
         disable=not use_tqdm,
@@ -363,7 +369,7 @@ def evaluate(
         loggers["action_orien_cos_sim"] = action_orien_cos_sim_logger
         loggers["multi_action_orien_cos_sim"] = multi_action_orien_cos_sim_logger
 
-    num_batches = min(len(dataloader), 1000)
+    num_batches = len(dataloader)
     num_batches = max(int(num_batches * eval_fraction), 1)
 
     viz_obs_image = None

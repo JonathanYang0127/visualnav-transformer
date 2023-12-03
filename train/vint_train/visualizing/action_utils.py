@@ -76,7 +76,6 @@ def visualize_traj_pred(
 
     dataset_names = list([k for k in data_config.keys()])
     dataset_names.sort()
-    print(dataset_names)
 
     batch_size = batch_obs_images.shape[0]
     wandb_list = []

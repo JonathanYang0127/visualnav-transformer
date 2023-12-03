@@ -159,12 +159,13 @@ def main(config):
         train_dataloader_names = []
         dataloader_config = {'wrist_image_only': False,
               'seq_length': 5,
-              'context_size': 1,
+              'context_size': 5,
               'visualize': True,
               'no_normalization': True,
               'image_size': image_size,
               'discrete': False,
-              'num_bins': 0}
+              'num_bins': 0,
+              'gnm_delta_actions': True}
         with tf.device('/cpu'):
             for dataset in datasets:
                 train_split='train'#[:95%]'
