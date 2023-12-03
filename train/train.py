@@ -324,6 +324,7 @@ def main(config):
         load_project_folder = os.path.join("logs", config["load_run"])
         print("Loading model from ", load_project_folder)
         latest_path = os.path.join(load_project_folder, "latest.pth")
+        latest_path = '/iris/u/jyang27/dev/visualnav-transformer/train/logs/vint-release/vint-5c_2023_11_25_09_48_18/70.pth'        
         latest_checkpoint = torch.load(latest_path) #f"cuda:{}" if torch.cuda.is_available() else "cpu")
         load_model(model, latest_checkpoint)
         current_epoch = latest_checkpoint["epoch"] + 1
