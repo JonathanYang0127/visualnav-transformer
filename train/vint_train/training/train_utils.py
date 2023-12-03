@@ -281,8 +281,8 @@ def train(
             action_mask=action_mask,
         )
 
-        losses["total_loss"].backward()
-        optimizer.step()
+        #losses["total_loss"].backward()
+        #optimizer.step()
 
         for key, value in losses.items():
             if key in loggers:
