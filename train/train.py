@@ -329,7 +329,12 @@ def main(config):
         current_epoch = latest_checkpoint["epoch"] + 1
 
     CHECKPOINT = '/iris/u/jyang27/dev/omnimimic/scripts/checkpoints/23-11-30-GNM-omnimimic-seed-50_17-13-4/policy_epoch_150_seed_50.ckpt'
-    CHECKPOINT = '/iris/u/jyang27/dev/omnimimic/scripts/checkpoints/23-11-30-GNM-omnimimic-seed-50_14-2-6/policy_epoch_75_seed_50.ckpt' 
+    CHECKPOINT = '/iris/u/jyang27/dev/omnimimic/scripts/checkpoints/23-11-30-GNM-omnimimic-seed-50_14-2-6/policy_epoch_125_seed_50.ckpt' 
+    #CHECKPOINT = '/iris/u/jyang27/dev/omnimimic/scripts/checkpoints/23-12-01-GNM-omnimimic-seed-20_29-23-21/policy_epoch_125_seed_20.ckpt'
+    #CHECKPOINT = '/iris/u/jyang27/dev/omnimimic/scripts/checkpoints/23-12-02-GNM-omnimimic-seed-50_40-22-2/policy_epoch_15_seed_50.ckpt'
+    #CHECKPOINT = '/iris/u/jyang27/dev/omnimimic/scripts/checkpoints/23-12-03-GNM-omnimimic-seed-50_53-13-58/policy_epoch_5_seed_50.ckpt'
+    CHECKPOINT = '/iris/u/jyang27/dev/omnimimic/scripts/checkpoints/23-12-03-GNM-omnimimic-seed-50_52-22-16/policy_epoch_10_seed_50.ckpt'
+    CHECKPOINT  = '/iris/u/jyang27/dev/omnimimic/scripts/checkpoints/23-12-03-GNM-omnimimic-seed-50_12-23-32/policy_epoch_10_seed_50.ckpt'
     model.load_state_dict(torch.load(CHECKPOINT), strict=False)
     # Multi-GPU
     if len(config["gpu_ids"]) > 1:
