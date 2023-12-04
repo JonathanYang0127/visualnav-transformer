@@ -32,10 +32,6 @@ ACTION_STATS = {}
 for key in data_config['action_stats']:
     ACTION_STATS[key] = np.array(data_config['action_stats'][key])
 
-def extract_waypoint(action):
-    waypoint = np.concatenate((-action[:, :, 2:3],
-                action[:, :, 1:2]), dim=-1)
-    return waypoint
 
 # Train utils for ViNT and GNM
 def _compute_losses(
@@ -65,11 +61,11 @@ def _compute_losses(
     action_loss = action_reduce(F.mse_loss(action_pred, action_label, reduction="none"))
 
     action_waypts_cos_similairity = action_reduce(F.cosine_similarity(
-        action_pred[:, :, :2], action_label[:, :, :2], dim=-1
+        action_pred, action_label, dim=-1
     ))
     multi_action_waypts_cos_sim = action_reduce(F.cosine_similarity(
-        torch.flatten(action_pred[:, :, :2], start_dim=1),
-        torch.flatten(action_label[:, :, :2], start_dim=1),
+        torch.flatten(action_pred, start_dim=1),
+        torch.flatten(action_label, start_dim=1),
         dim=-1,
     ))
 
@@ -81,8 +77,10 @@ def _compute_losses(
     }
 
     if learn_angle:
+        raise NotImplementedError
+        '''
         action_orien_cos_sim = action_reduce(F.cosine_similarity(
-            action_pred[:, :, 2:], action_label[:, :, 2:], dim=-1
+            action_pred, action_label[:, :, 2:], dim=-1
         ))
         multi_action_orien_cos_sim = action_reduce(F.cosine_similarity(
             torch.flatten(action_pred[:, :, 2:], start_dim=1),
@@ -92,7 +90,7 @@ def _compute_losses(
         )
         results["action_orien_cos_sim"] = action_orien_cos_sim
         results["multi_action_orien_cos_sim"] = multi_action_orien_cos_sim
-
+        '''
     total_loss = alpha * 1e-2 * dist_loss + (1 - alpha) * action_loss
     results["total_loss"] = total_loss
 

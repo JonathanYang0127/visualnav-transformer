@@ -85,6 +85,7 @@ def main(config):
     if "clip_goals" not in config:
         config["clip_goals"] = False
 
+    '''
     for dataset_name in config["datasets"]:
         data_config = config["datasets"][dataset_name]
         if "negative_mining" not in data_config:
@@ -137,10 +138,8 @@ def main(config):
         drop_last=False,
         persistent_workers=True,
     )
-
     if "eval_batch_size" not in config:
         config["eval_batch_size"] = config["batch_size"]
-
     for dataset_type, dataset in test_dataloaders.items():
         test_dataloaders[dataset_type] = DataLoader(
             dataset,
@@ -149,20 +148,19 @@ def main(config):
             num_workers=0,
             drop_last=False,
         )
-    
+    '''
 
     if config['use_rlds']:
         TFDS_DATA_DIR = '/iris/u/jyang27/rlds_data'
         datasets = ['gnm_dataset']
-        image_size=(64, 64)
-        train_dataloaders, val_dataloaders, val_metadata = [], [], []
+        train_dataloaders = []
         train_dataloader_names = []
         dataloader_config = {'wrist_image_only': False,
-              'seq_length': 5,
-              'context_size': 5,
+              'seq_length': config["len_traj_pred"],
+              'context_size': config["context_size"],
               'visualize': True,
-              'no_normalization': True,
-              'image_size': image_size,
+              'no_normalization': False,
+              'image_size': config['image_size'],
               'discrete': False,
               'num_bins': 0,
               'gnm_delta_actions': True}
@@ -174,15 +172,26 @@ def main(config):
                         data_dir=TFDS_DATA_DIR, version=version)
                     train_dataloaders.append(train_dataloader)
                     train_dataloader_names.append(dataset)
+
+                splits = ['train[:2%]', 'train[50%:52%]']
+                val_dataloader_splits = []
+                for split in splits:
+                    val_split, val_meta = make_dataloader(dataset, split, dataloader_config,
+                        data_dir=TFDS_DATA_DIR, validation=True)
+                    val_dataloader_splits.append(val_split)
+                val_dataloader = tf.data.Dataset.sample_from_datasets(val_dataloader_splits)
+                val_dataloader = shuffle_batch_and_prefetch_dataloader(val_dataloader,
+                     config['batch_size'] // 2, shuffle_size=10000)
+                test_dataloaders[dataset] = RLDSTorchDataset(val_dataloader.as_numpy_iterator())
             
             sample_weights = [DATASET_SPLITS[d] for d in train_dataloader_names]
-            print(sample_weights)
             sample_weights /= tf.reduce_sum(sample_weights)
             train_dataloader = tf.data.Dataset.sample_from_datasets(
                 train_dataloaders, sample_weights)
             train_dataloader = shuffle_batch_and_prefetch_dataloader(train_dataloader,
                  config['batch_size'], shuffle_size=10000)
             train_loader = RLDSTorchDataset(train_dataloader.as_numpy_iterator())    
+            
 
     # Create the model
     if config["model_type"] == "gnm":
