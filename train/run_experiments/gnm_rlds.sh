@@ -14,7 +14,7 @@ conda deactivate
 conda activate navigation_env
 
 cd /iris/u/jyang27/dev/visualnav-transformer/train
-python train.py -c config/vint_sacson.yaml --use-rlds
+python train.py -c config/vint_sacson.yaml --use-rlds --datasets gnm_dataset
 
 #done
 

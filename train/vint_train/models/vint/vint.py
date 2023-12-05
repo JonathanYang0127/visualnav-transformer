@@ -40,9 +40,9 @@ class ViNT(BaseModel):
             self.obs_encoder = EfficientNet.from_name(obs_encoder, in_channels=3) # context
             self.num_obs_features = self.obs_encoder._fc.in_features
             if self.late_fusion:
-                self.goal_encoder = EfficientNet.from_name("efficientnet-b0", in_channels=3)
+                self.goal_encoder = EfficientNet.from_name(obs_encoder, in_channels=3)
             else:
-                self.goal_encoder = EfficientNet.from_name("efficientnet-b0", in_channels=6) # obs+goal
+                self.goal_encoder = EfficientNet.from_name(obs_encoder, in_channels=6) # obs+goal
             self.num_goal_features = self.goal_encoder._fc.in_features
         else:
             raise NotImplementedError
@@ -130,6 +130,7 @@ class ViNT(BaseModel):
         action_pred = action_pred.reshape(
             (action_pred.shape[0], self.len_trajectory_pred, self.num_action_params)
         )
+        '''
         action_pred[:, :, :2] = torch.cumsum(
             action_pred[:, :, :2], dim=1
         )  # convert position deltas into waypoints
@@ -137,4 +138,5 @@ class ViNT(BaseModel):
             action_pred[:, :, 2:] = F.normalize(
                 action_pred[:, :, 2:].clone(), dim=-1
             )  # normalize the angle prediction
+        '''
         return dist_pred, action_pred

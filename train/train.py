@@ -152,7 +152,9 @@ def main(config):
 
     if config['use_rlds']:
         TFDS_DATA_DIR = '/iris/u/jyang27/rlds_data'
-        datasets = ['gnm_dataset']
+        datasets = config['datasets']
+        if 'all' in datasets:
+            datasets = list(DATASET_SPLITS.keys())
         train_dataloaders = []
         train_dataloader_names = []
         dataloader_config = {'wrist_image_only': False,
@@ -415,6 +417,12 @@ if __name__ == "__main__":
         action='store_true',
         default=False
     )
+    parser.add_argument(
+        '--datasets',
+        type=str,
+        nargs='+',
+        required=True
+    )
     args = parser.parse_args()
 
     with open("config/defaults.yaml", "r") as f:
@@ -428,6 +436,7 @@ if __name__ == "__main__":
     config.update(user_config)
 
     config['use_rlds'] = args.use_rlds
+    config['datasets'] = datasets
     config["run_name"] += "_" + time.strftime("%Y_%m_%d_%H_%M_%S")
     config["project_folder"] = os.path.join(
         "logs", config["project_name"], config["run_name"]
