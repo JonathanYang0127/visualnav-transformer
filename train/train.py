@@ -165,7 +165,7 @@ def main(config):
               'image_size': image_size,
               'discrete': False,
               'num_bins': 0,
-              'gnm_delta_actions': True}
+              'gnm_delta_actions': False}
         with tf.device('/cpu'):
             for dataset in datasets:
                 train_split='train'#[:95%]'
