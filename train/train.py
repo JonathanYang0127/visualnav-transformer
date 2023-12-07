@@ -160,7 +160,7 @@ def main(config):
         dataloader_config = {'wrist_image_only': False,
               'seq_length': config["len_traj_pred"],
               'context_size': config["context_size"],
-              'visualize': True,
+              'visualize': False,
               'no_normalization': False,
               'image_size': config['image_size'],
               'discrete': False,
@@ -183,8 +183,9 @@ def main(config):
                     val_dataloader_splits.append(val_split)
                 val_dataloader = tf.data.Dataset.sample_from_datasets(val_dataloader_splits)
                 val_dataloader = shuffle_batch_and_prefetch_dataloader(val_dataloader,
-                     config['batch_size'] // 2, shuffle_size=10000)
-                test_dataloaders[dataset] = RLDSTorchDataset(val_dataloader.as_numpy_iterator())
+                     64, shuffle_size=10000)
+                test_dataloaders[dataset] = RLDSTorchDataset(val_dataloader.as_numpy_iterator(),
+                        dataset_length=50)
             
             sample_weights = [DATASET_SPLITS[d] for d in train_dataloader_names]
             sample_weights /= tf.reduce_sum(sample_weights)
@@ -436,7 +437,7 @@ if __name__ == "__main__":
     config.update(user_config)
 
     config['use_rlds'] = args.use_rlds
-    config['datasets'] = datasets
+    config['datasets'] = args.datasets
     config["run_name"] += "_" + time.strftime("%Y_%m_%d_%H_%M_%S")
     config["project_folder"] = os.path.join(
         "logs", config["project_name"], config["run_name"]
