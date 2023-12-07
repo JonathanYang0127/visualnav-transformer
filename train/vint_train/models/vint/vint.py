@@ -130,9 +130,11 @@ class ViNT(BaseModel):
         action_pred = action_pred.reshape(
             (action_pred.shape[0], self.len_trajectory_pred, self.num_action_params)
         )
+        '''
         action_pred[:, :, :2] = torch.cumsum(
             action_pred[:, :, :2], dim=1
         )  # convert position deltas into waypoints
+        '''
         if self.learn_angle:
             action_pred[:, :, 2:] = F.normalize(
                 action_pred[:, :, 2:].clone(), dim=-1
