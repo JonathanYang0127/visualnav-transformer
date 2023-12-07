@@ -182,7 +182,8 @@ def main(config):
                 train_dataloaders, sample_weights)
             train_dataloader = shuffle_batch_and_prefetch_dataloader(train_dataloader,
                  config['batch_size'], shuffle_size=10000)
-            train_loader = RLDSTorchDataset(train_dataloader.as_numpy_iterator())    
+            train_loader = RLDSTorchDataset(train_dataloader.as_numpy_iterator(),
+                    convert_action_dim=True)    
 
     # Create the model
     if config["model_type"] == "gnm":
