@@ -25,7 +25,7 @@ class BaseModel(nn.Module):
         if self.learn_angle:
             self.num_action_params = 4  # last two dims are the cos and sin of the angle
         else:
-            self.num_action_params = 7
+            self.num_action_params = 2
 
     def flatten(self, z: torch.Tensor) -> torch.Tensor:
         z = nn.functional.adaptive_avg_pool2d(z, (1, 1))
