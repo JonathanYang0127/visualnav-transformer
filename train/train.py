@@ -71,7 +71,7 @@ def main(config):
 
     cudnn.benchmark = True  # good if input sizes don't vary
     transform = ([
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        #transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
     transform = transforms.Compose(transform)
 
@@ -155,6 +155,7 @@ def main(config):
         datasets = config['datasets']
         if 'all' in datasets:
             datasets = list(DATASET_SPLITS.keys())
+            TFDS_DATA_DIR = '/scr/jonathan/rlds_data'
         train_dataloaders = []
         train_dataloader_names = []
         dataloader_config = {'wrist_image_only': False,
@@ -250,7 +251,7 @@ def main(config):
             raise ValueError(f"Vision encoder {config['vision_encoder']} not supported")
             
         noise_pred_net = ConditionalUnet1D(
-                input_dim=2,
+                input_dim=7,
                 global_cond_dim=config["encoding_size"],
                 down_dims=config["down_dims"],
                 cond_predict_scale=config["cond_predict_scale"],

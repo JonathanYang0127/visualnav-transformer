@@ -91,7 +91,7 @@ def _compute_losses(
         results["action_orien_cos_sim"] = action_orien_cos_sim
         results["multi_action_orien_cos_sim"] = multi_action_orien_cos_sim
         '''
-    total_loss = alpha * 1e-2 * dist_loss + (1 - alpha) * action_loss
+    total_loss = alpha * 1e-3 * dist_loss + (1 - alpha) * action_loss
     results["total_loss"] = total_loss
 
     return results
@@ -498,20 +498,20 @@ def _compute_losses_nomad(
     gc_action_loss = action_reduce(F.mse_loss(gc_actions, batch_action_label, reduction="none"))
 
     uc_action_waypts_cos_similairity = action_reduce(F.cosine_similarity(
-        uc_actions[:, :, :2], batch_action_label[:, :, :2], dim=-1
+        uc_actions, batch_action_label, dim=-1
     ))
     uc_multi_action_waypts_cos_sim = action_reduce(F.cosine_similarity(
-        torch.flatten(uc_actions[:, :, :2], start_dim=1),
-        torch.flatten(batch_action_label[:, :, :2], start_dim=1),
+        torch.flatten(uc_actions, start_dim=1),
+        torch.flatten(batch_action_label, start_dim=1),
         dim=-1,
     ))
 
     gc_action_waypts_cos_similairity = action_reduce(F.cosine_similarity(
-        gc_actions[:, :, :2], batch_action_label[:, :, :2], dim=-1
+        gc_actions, batch_action_label, dim=-1
     ))
     gc_multi_action_waypts_cos_sim = action_reduce(F.cosine_similarity(
-        torch.flatten(gc_actions[:, :, :2], start_dim=1),
-        torch.flatten(batch_action_label[:, :, :2], start_dim=1),
+        torch.flatten(gc_actions, start_dim=1),
+        torch.flatten(batch_action_label, start_dim=1),
         dim=-1,
     ))
 
@@ -622,10 +622,16 @@ def train_nomad(
             # Get distance label
             distance = distance.float().to(device)
 
+            
+            # Normalization is done on the dataloader side
+            # By default, the dataloader outputs deltas
+            '''
             deltas = get_delta(actions)
             ndeltas = normalize_data(deltas, ACTION_STATS)
             naction = from_numpy(ndeltas).to(device)
             assert naction.shape[-1] == 2, "action dim must be 2"
+            '''
+            naction = actions
 
             # Predict distance
             dist_pred = model("dist_pred_net", obsgoal_cond=obsgoal_cond)
@@ -834,10 +840,13 @@ def evaluate_nomad(
 
             distance = distance.to(device)
 
+            '''
             deltas = get_delta(actions)
             ndeltas = normalize_data(deltas, ACTION_STATS)
             naction = from_numpy(ndeltas).to(device)
             assert naction.shape[-1] == 2, "action dim must be 2"
+            '''
+            naction = actions
 
             # Sample noise to add to actions
             noise = torch.randn(naction.shape, device=device)
@@ -938,14 +947,14 @@ def get_data_stats(data):
 
 def normalize_data(data, stats):
     # nomalize to [0,1]
-    ndata = (data - stats['min']) / (stats['max'] - stats['min'])
+    #ndata = (data - stats['min']) / (stats['max'] - stats['min'])
     # normalize to [-1, 1]
-    ndata = ndata * 2 - 1
+    #ndata = ndata * 2 - 1
     return ndata
 
 def unnormalize_data(ndata, stats):
-    ndata = (ndata + 1) / 2
-    data = ndata * (stats['max'] - stats['min']) + stats['min']
+    #ndata = (ndata + 1) / 2
+    #data = ndata * (stats['max'] - stats['min']) + stats['min']
     return data
 
 def get_delta(actions):
@@ -962,7 +971,7 @@ def get_action(diffusion_output, action_stats=ACTION_STATS):
     ndeltas = ndeltas.reshape(ndeltas.shape[0], -1, 2)
     ndeltas = to_numpy(ndeltas)
     ndeltas = unnormalize_data(ndeltas, action_stats)
-    actions = np.cumsum(ndeltas, axis=1)
+    #actions = np.cumsum(ndeltas, axis=1)
     return from_numpy(actions).to(device)
 
 
