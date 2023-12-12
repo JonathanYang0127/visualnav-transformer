@@ -55,7 +55,7 @@ action:
   max_dist_cat: 20
 
 # action output params
-len_traj_pred: 5
+len_traj_pred: 8
 learn_angle: False
 
 # dataset specific parameters
@@ -115,8 +115,8 @@ datasets:
 # logging stuff
 ## =0 turns off
 print_log_freq: 100 # in iterations
-image_log_freq: 1000 #0 # in iterations
-num_images_log: 8 #0 
+image_log_freq: 0 #0 # in iterations
+num_images_log: 0 #0 
 pairwise_test_freq: 0 # in epochs
 eval_fraction: 0.25
 wandb_log_freq: 10 # in iterations

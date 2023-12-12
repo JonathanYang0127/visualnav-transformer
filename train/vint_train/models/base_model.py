@@ -10,6 +10,7 @@ class BaseModel(nn.Module):
         context_size: int = 5,
         len_traj_pred: Optional[int] = 5,
         learn_angle: Optional[bool] = True,
+        num_action_params=None
     ) -> None:
         """
         Base Model main class
@@ -26,6 +27,8 @@ class BaseModel(nn.Module):
             self.num_action_params = 4  # last two dims are the cos and sin of the angle
         else:
             self.num_action_params = 7
+        if num_action_params is not None:
+           self.num_action_params = num_action_params 
 
     def flatten(self, z: torch.Tensor) -> torch.Tensor:
         z = nn.functional.adaptive_avg_pool2d(z, (1, 1))

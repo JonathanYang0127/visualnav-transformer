@@ -34,7 +34,8 @@ class NoMaD_ViNT(nn.Module):
             raise NotImplementedError
         
         # Initialize the goal encoder
-        self.goal_encoder = EfficientNet.from_name("efficientnet-b0", in_channels=6) # obs+goal
+        #self.goal_encoder = EfficientNet.from_name("efficientnet-b0", in_channels=6) # obs+goal
+        self.goal_encoder = EfficientNet.from_name(obs_encoder, in_channels=6)
         self.goal_encoder = replace_bn_with_gn(self.goal_encoder)
         self.num_goal_features = self.goal_encoder._fc.in_features
 

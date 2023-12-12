@@ -950,12 +950,12 @@ def normalize_data(data, stats):
     #ndata = (data - stats['min']) / (stats['max'] - stats['min'])
     # normalize to [-1, 1]
     #ndata = ndata * 2 - 1
-    return ndata
+    return data
 
 def unnormalize_data(ndata, stats):
     #ndata = (ndata + 1) / 2
     #data = ndata * (stats['max'] - stats['min']) + stats['min']
-    return data
+    return ndata
 
 def get_delta(actions):
     # append zeros to first action
@@ -968,11 +968,11 @@ def get_action(diffusion_output, action_stats=ACTION_STATS):
     # return: (B, T-1)
     device = diffusion_output.device
     ndeltas = diffusion_output
-    ndeltas = ndeltas.reshape(ndeltas.shape[0], -1, 2)
+    ndeltas = ndeltas.reshape(ndeltas.shape[0], -1, 7)
     ndeltas = to_numpy(ndeltas)
     ndeltas = unnormalize_data(ndeltas, action_stats)
     #actions = np.cumsum(ndeltas, axis=1)
-    return from_numpy(actions).to(device)
+    return from_numpy(ndeltas).to(device)
 
 
 def model_output(
@@ -1000,7 +1000,6 @@ def model_output(
         (len(obs_cond), pred_horizon, action_dim), device=device)
     diffusion_output = noisy_diffusion_output
 
-
     for k in noise_scheduler.timesteps[:]:
         # predict noise
         noise_pred = model(
@@ -1016,7 +1015,6 @@ def model_output(
             timestep=k,
             sample=diffusion_output
         ).prev_sample
-
     uc_actions = get_action(diffusion_output, ACTION_STATS)
 
     # initialize action from Gaussian noise

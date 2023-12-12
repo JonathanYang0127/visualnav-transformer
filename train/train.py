@@ -156,6 +156,7 @@ def main(config):
         if 'all' in datasets:
             datasets = list(DATASET_SPLITS.keys())
             TFDS_DATA_DIR = '/scr/jonathan/rlds_data'
+            print("Using /scr data dir")
         train_dataloaders = []
         train_dataloader_names = []
         dataloader_config = {'wrist_image_only': False,
