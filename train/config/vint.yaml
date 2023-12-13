@@ -4,7 +4,7 @@ run_name: vint-5c
 # training setup
 use_wandb: True # set to false if you don't want to log to wandb
 train: True
-batch_size: 256
+batch_size: 32
 epochs: 100
 gpu_ids: [0]
 num_workers: 12
@@ -34,7 +34,7 @@ normalize: True
 
 # context
 context_type: temporal
-context_size: 5
+context_size: 1
 # tradeoff between action and distance prediction loss
 alpha: 0.5
 

@@ -604,7 +604,8 @@ def train_nomad(
                 dataset_idx,
                 action_mask, 
             ) = data
-            
+            if i >= num_batches:
+                break        
             obs_images = torch.split(obs_image, 3, dim=1)
             batch_viz_obs_images = TF.resize(obs_images[-1], VISUALIZATION_IMAGE_SIZE[::-1])
             batch_viz_goal_images = TF.resize(goal_image, VISUALIZATION_IMAGE_SIZE[::-1])
@@ -617,6 +618,7 @@ def train_nomad(
 
             # Generate random goal mask
             goal_mask = (torch.rand((B,)) < goal_mask_prob).long().to(device)
+            #goal_mask = torch.zeros((batch_goal_images.shape[0],)).long().to(device)
             obsgoal_cond = model("vision_encoder", obs_img=batch_obs_images, goal_img=batch_goal_images, input_goal_mask=goal_mask)
             
             # Get distance label
@@ -815,7 +817,9 @@ def evaluate_nomad(
                 dataset_idx,
                 action_mask,
             ) = data
-            
+            if i >= num_batches:
+                break
+            print(obs_image.shape)        
             obs_images = torch.split(obs_image, 3, dim=1)
             batch_viz_obs_images = TF.resize(obs_images[-1], VISUALIZATION_IMAGE_SIZE[::-1])
             batch_viz_goal_images = TF.resize(goal_image, VISUALIZATION_IMAGE_SIZE[::-1])
