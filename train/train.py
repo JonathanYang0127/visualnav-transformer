@@ -271,6 +271,11 @@ def main(config):
             clip_sample=True,
             prediction_type='epsilon'
         )
+        '''
+        if len(config["gpu_ids"]) > 1:
+            noise_scheduler = nn.DataParallel(noise_scheduler, device_ids=config["gpu_ids"])
+        noise_scheduler = model.to(device)
+        '''
     else:
         raise ValueError(f"Model {config['model']} not supported")
 
@@ -339,8 +344,16 @@ def main(config):
         print("Loading model from ", load_project_folder)
         latest_path = os.path.join(load_project_folder, "latest.pth")
         latest_checkpoint = torch.load(latest_path) #f"cuda:{}" if torch.cuda.is_available() else "cpu")
-        load_model(model, latest_checkpoint)
-        current_epoch = latest_checkpoint["epoch"] + 1
+        if config['model_type'] == 'nomad':
+            state_dict = latest_checkpoint
+            try:
+                model.load_state_dict(state_dict, strict=True)
+            except:
+                state_dict = {k[7:]: v for k, v in state_dict.items()}
+                model.load_state_dict(state_dict, strict=True)
+        else:
+            load_model(model, latest_checkpoint)
+        current_epoch = latest_checkpoint.get("epoch", -1) + 1
 
     # Multi-GPU
     if len(config["gpu_ids"]) > 1:
@@ -348,9 +361,12 @@ def main(config):
     model = model.to(device)
 
     if "load_run" in config:  # load optimizer and scheduler after data parallel
-        optimizer.load_state_dict(latest_checkpoint["optimizer"].state_dict())
-        if scheduler is not None:
-            scheduler.load_state_dict(latest_checkpoint["scheduler"].state_dict())
+        try:
+            optimizer.load_state_dict(latest_checkpoint["optimizer"].state_dict())
+            if scheduler is not None:
+                scheduler.load_state_dict(latest_checkpoint["scheduler"].state_dict())
+        except:
+            print("Error loading optimizer and scheduler")
 
     if config["model_type"] == "vint" or config["model_type"] == "gnm": 
         train_eval_loop(

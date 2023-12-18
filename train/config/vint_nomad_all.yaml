@@ -1,5 +1,5 @@
-project_name: nomad_polybot
-run_name: nomad_polybot
+project_name: nomad_all
+run_name: nomad_all
 
 # training setup
 use_wandb: True # set to false if you don't want to log to wandb
@@ -27,9 +27,9 @@ encoding_size: 256
 obs_encoder: efficientnet-b5
 attn_unet: False
 cond_predict_scale: False
-mha_num_attention_heads: 12
-mha_num_attention_layers: 12
-mha_ff_dim_factor: 12
+mha_num_attention_heads: 16
+mha_num_attention_layers: 16
+mha_ff_dim_factor: 16
 down_dims: [64, 128, 256]
 
 # diffusion model params
@@ -120,4 +120,4 @@ num_images_log: 8 #0
 pairwise_test_freq: 0 # in epochs
 eval_fraction: 0.25
 wandb_log_freq: 10 # in iterations
-eval_freq: 1 # in epochs
+eval_freq: 5 # in epochs
