@@ -8,7 +8,7 @@ import tqdm
 import itertools
 
 from vint_train.visualizing.action_utils import visualize_traj_pred, plot_trajs_and_points
-from vint_train.visualizing.distance_utils import visualize_dist_pred
+from vint_train.visualizing.distance_utils import visualize_dist_pred, visualize_train_images
 from vint_train.visualizing.visualize_utils import to_numpy, from_numpy
 from vint_train.training.logger import Logger
 from vint_train.data.data_utils import VISUALIZATION_IMAGE_SIZE
@@ -613,6 +613,7 @@ def train_nomad(
             batch_obs_images = torch.cat(batch_obs_images, dim=1).to(device)
             batch_goal_images = transform(goal_image).to(device)
             action_mask = action_mask.to(device)
+            device = batch_obs_images.device
 
             B = actions.shape[0]
 
@@ -633,7 +634,7 @@ def train_nomad(
             naction = from_numpy(ndeltas).to(device)
             assert naction.shape[-1] == 2, "action dim must be 2"
             '''
-            naction = actions
+            naction = actions.to(device)
 
             # Predict distance
             dist_pred = model("dist_pred_net", obsgoal_cond=obsgoal_cond)
@@ -667,7 +668,7 @@ def train_nomad(
             diffusion_loss = action_reduce(F.mse_loss(noise_pred, noise, reduction="none"))
             
             # Total loss
-            loss = alpha * dist_loss + (1-alpha) * diffusion_loss
+            loss = alpha * (0.01) * dist_loss + (1-alpha) * diffusion_loss
 
             # Optimize
             optimizer.zero_grad()
@@ -819,7 +820,6 @@ def evaluate_nomad(
             ) = data
             if i >= num_batches:
                 break
-            print(obs_image.shape)        
             obs_images = torch.split(obs_image, 3, dim=1)
             batch_viz_obs_images = TF.resize(obs_images[-1], VISUALIZATION_IMAGE_SIZE[::-1])
             batch_viz_goal_images = TF.resize(goal_image, VISUALIZATION_IMAGE_SIZE[::-1])
@@ -827,6 +827,7 @@ def evaluate_nomad(
             batch_obs_images = torch.cat(batch_obs_images, dim=1).to(device)
             batch_goal_images = transform(goal_image).to(device)
             action_mask = action_mask.to(device)
+            device = batch_obs_images.device
 
             B = actions.shape[0]
 
@@ -850,7 +851,7 @@ def evaluate_nomad(
             naction = from_numpy(ndeltas).to(device)
             assert naction.shape[-1] == 2, "action dim must be 2"
             '''
-            naction = actions
+            naction = actions.to(device)
 
             # Sample noise to add to actions
             noise = torch.randn(naction.shape, device=device)
@@ -860,7 +861,6 @@ def evaluate_nomad(
                 0, noise_scheduler.config.num_train_timesteps,
                 (B,), device=device
             ).long()
-
             noisy_actions = noise_scheduler.add_noise(
                 naction, noise, timesteps)
 
@@ -918,6 +918,14 @@ def evaluate_nomad(
 
                 if use_wandb and i % wandb_log_freq == 0 and wandb_log_freq != 0:
                     wandb.log(data_log, commit=True)
+                '''
+                visualize_train_images(
+                    to_numpy(batch_obs_images),
+                    project_folder,
+                    epoch,
+                    num_images_log=num_images_log
+                )
+                '''
 
             if image_log_freq != 0 and i % image_log_freq == 0:
                 visualize_diffusion_action_distribution(

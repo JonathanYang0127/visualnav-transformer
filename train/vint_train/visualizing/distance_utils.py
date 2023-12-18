@@ -6,6 +6,41 @@ from vint_train.visualizing.visualize_utils import numpy_to_img
 import matplotlib.pyplot as plt
 
 
+def visualize_train_images(
+    batch_obs_images,
+    save_folder,
+    epoch,
+    num_images_log=10
+):
+    visualize_path = os.path.join(
+        save_folder,
+        "visualize",
+        f"epoch{epoch}",
+        "train_images"
+    )
+    wandb_list = []
+    batch_obs_images = np.transpose(batch_obs_images, (0, 2, 3, 1))
+    save_path = os.path.join(visualize_path, f"{epoch}.png")
+    plt.figure()
+    fig, ax = plt.subplots(1, len(num_images_log))
+
+    plt.suptitle(f"train_image")
+
+    for i, (axis, title) in enumerate(zip(ax, titles)):
+        img = batch_obs_images[i]
+        axis.imshow(img)
+        axis.set_title(title)
+        axis.xaxis.set_visible(False)
+        axis.yaxis.set_visible(False)
+    fig.savefig(
+        save_path,
+        bbox_inches="tight"
+    )
+    wandb.log({f"train_images": wandb.Image(
+        save_path)}, commit=False)
+
+
+
 def visualize_dist_pred(
     batch_obs_images: np.ndarray,
     batch_goal_images: np.ndarray,
