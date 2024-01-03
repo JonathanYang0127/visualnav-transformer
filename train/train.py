@@ -157,6 +157,11 @@ def main(config):
             datasets = list(DATASET_SPLITS.keys())
             TFDS_DATA_DIR = '/scr/jonathan/rlds_data'
             print("Using /scr data dir")
+        if 'no_gnm' in datasets:
+            datasets = list([k for k in DATASET_SPLITS.keys() 
+                if k != 'gnm_dataset'])
+            TFDS_DATA_DIR = '/scr/jonathan/rlds_data'
+            print("Using /scr data dir")
         train_dataloaders = []
         train_dataloader_names = []
         dataloader_config = {'wrist_image_only': False,
@@ -172,8 +177,14 @@ def main(config):
             for dataset in datasets:
                 train_split='train'#[:95%]'
                 for version in VERSION_DICT.get(dataset, [None]):
-                    train_dataloader, _ = make_dataloader(dataset, train_split, dataloader_config,
-                        data_dir=TFDS_DATA_DIR, version=version)
+                    try:
+                        TFDS_DATA_DIR = '/scr/jonathan/rlds_data'
+                        train_dataloader, _ = make_dataloader(dataset, train_split, dataloader_config,
+                            data_dir=TFDS_DATA_DIR, version=version)
+                    except:
+                        TFDS_DATA_DIR = '/iris/u/jyang27/rlds_data'
+                        train_dataloader, _ = make_dataloader(dataset, train_split, dataloader_config,
+                            data_dir=TFDS_DATA_DIR, version=version)
                     train_dataloaders.append(train_dataloader)
                     train_dataloader_names.append(dataset)
 
