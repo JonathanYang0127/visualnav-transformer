@@ -315,6 +315,7 @@ def plot_trajs_and_points(
                 marker="o",
             )
         if traj.shape[1] > 2 and quiver_freq > 0:  # traj data also includes yaw of the robot
+            import pdb; pdb.set_trace()
             bearings = gen_bearings_from_waypoints(traj)
             ax.quiver(
                 traj[::quiver_freq, 0],
