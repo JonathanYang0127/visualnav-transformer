@@ -27,10 +27,10 @@ encoding_size: 256
 obs_encoder: efficientnet-b3
 attn_unet: False
 cond_predict_scale: False
-mha_num_attention_heads: 8
-mha_num_attention_layers: 8
-mha_ff_dim_factor: 8
-down_dims: [64, 128, 256]
+mha_num_attention_heads: 4
+mha_num_attention_layers: 4
+mha_ff_dim_factor: 4
+down_dims: [128, 256, 512]
 
 # diffusion model params
 num_diffusion_iters: 10
