@@ -36,6 +36,7 @@ from vint_train.training.train_eval_loop import (
     train_eval_loop,
     train_eval_loop_nomad,
     load_model,
+    count_parameters,
 )
 
 from omnimimic.data.dataset import *
@@ -370,6 +371,8 @@ def main(config):
     if len(config["gpu_ids"]) > 1:
         model = nn.DataParallel(model, device_ids=config["gpu_ids"])
     model = model.to(device)
+
+    print(f"Num parameters: {count_parameters(model)}")
 
     if "load_run" in config:  # load optimizer and scheduler after data parallel
         try:
