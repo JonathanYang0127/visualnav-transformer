@@ -1,6 +1,6 @@
 import os
-os.environ['WANDB_API_KEY'] = '6bc5ed6cff29e874c30c04f4a29faae7ae603964'
-os.environ['WANDB_ENTITY'] = 'jyang27'
+os.environ['WANDB_API_KEY'] = 'a83d04a0c8fd23b049d3beae48c339102b1caf6e' 
+os.environ['WANDB_ENTITY'] = 'catglossop'
 os.environ["WANDB__SERVICE_WAIT"] = "10000"
 import wandb
 import argparse
@@ -151,16 +151,16 @@ def main(config):
     '''
 
     if config['use_rlds']:
-        TFDS_DATA_DIR = '/iris/u/jyang27/rlds_data'
+        TFDS_DATA_DIR = '/global/scratch/users/catherineglossop/data'
         datasets = config['datasets']
         if 'all' in datasets:
             datasets = list(DATASET_SPLITS.keys())
-            TFDS_DATA_DIR = '/scr/jonathan/rlds_data'
+            TFDS_DATA_DIR = '/global/scratch/users/catherineglossop/data'
             print("Using /scr data dir")
         if 'no_gnm' in datasets:
             datasets = list([k for k in DATASET_SPLITS.keys() 
                 if k != 'gnm_dataset'])
-            TFDS_DATA_DIR = '/scr/jonathan/rlds_data'
+            TFDS_DATA_DIR = '/global/scratch/users/catherineglossop/data'
             print("Using /scr data dir")
         train_dataloaders = []
         train_dataloader_names = []
@@ -178,11 +178,11 @@ def main(config):
                 train_split='train'#[:95%]'
                 for version in VERSION_DICT.get(dataset, [None]):
                     try:
-                        TFDS_DATA_DIR = '/scr/jonathan/rlds_data'
+                        TFDS_DATA_DIR = '/global/scratch/users/catherineglossop/data'
                         train_dataloader, _ = make_dataloader(dataset, train_split, dataloader_config,
                             data_dir=TFDS_DATA_DIR, version=version)
                     except:
-                        TFDS_DATA_DIR = '/iris/u/jyang27/rlds_data'
+                        TFDS_DATA_DIR = '/global/scratch/users/catherineglossop/data'
                         train_dataloader, _ = make_dataloader(dataset, train_split, dataloader_config,
                             data_dir=TFDS_DATA_DIR, version=version)
                     train_dataloaders.append(train_dataloader)
@@ -351,7 +351,7 @@ def main(config):
 
     current_epoch = 0
     if "load_run" in config:
-        load_project_folder = os.path.join("logs", config["load_run"])
+        load_project_folder = os.path.join("/global/scratch/users/catherineglossop/omnimimic/logs", config["load_run"])
         print("Loading model from ", load_project_folder)
         latest_path = os.path.join(load_project_folder, "latest.pth")
         latest_checkpoint = torch.load(latest_path) #f"cuda:{}" if torch.cuda.is_available() else "cpu")
@@ -469,7 +469,7 @@ if __name__ == "__main__":
     config['datasets'] = args.datasets
     config["run_name"] += "_" + time.strftime("%Y_%m_%d_%H_%M_%S")
     config["project_folder"] = os.path.join(
-        "logs", config["project_name"], config["run_name"]
+        "/global/scratch/users/catherineglossop/omnimimic/logs", config["project_name"], config["run_name"]
     )
     os.makedirs(
         config[
@@ -482,7 +482,7 @@ if __name__ == "__main__":
         wandb.init(
             project=config["project_name"],
             settings=wandb.Settings(start_method="fork"),
-            entity="jyang27", # TODO: change this to your wandb entity
+            entity="catglossop", # TODO: change this to your wandb entity
         )
         wandb.save(args.config, policy="now")  # save the config file
         wandb.run.name = config["run_name"]
