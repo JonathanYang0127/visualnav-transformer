@@ -173,7 +173,10 @@ def main(config):
               'image_size': config['image_size'],
               'discrete': False,
               'num_bins': 0,
-              'gnm_delta_actions': True}
+              'gnm_delta_actions': True, 
+              'num_trajectories': None,
+              'gnm_dataset': 'sacson'
+              }
         with tf.device('/cpu'):
             for dataset in datasets:
                 train_split='train'#[:95%]'
