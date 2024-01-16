@@ -663,7 +663,7 @@ def train_nomad(
                     unreduced_loss = unreduced_loss.mean(dim=-1)
                 assert unreduced_loss.shape == action_mask.shape, f"{unreduced_loss.shape} != {action_mask.shape}"
                 return (unreduced_loss * action_mask).mean() / (action_mask.mean() + 1e-2)
-
+            breakpoint()
             # L2 loss
             diffusion_loss = action_reduce(F.mse_loss(noise_pred, noise, reduction="none"))
             
