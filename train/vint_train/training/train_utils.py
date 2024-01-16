@@ -634,7 +634,7 @@ def train_nomad(
             naction = from_numpy(ndeltas).to(device)
             assert naction.shape[-1] == 2, "action dim must be 2"
             '''
-            naction = actions.to(device)
+            naction = actions.float().to(device)
 
             # Predict distance
             dist_pred = model("dist_pred_net", obsgoal_cond=obsgoal_cond)
