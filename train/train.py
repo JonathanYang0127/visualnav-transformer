@@ -165,7 +165,7 @@ def main(config):
             print("Using /scr data dir")
         train_dataloaders = []
         train_dataloader_names = []
-        dataloader_config = {'wrist_image_only': False,
+        dataloader_config = {'wrist_image_only': True,
               'seq_length': config["len_traj_pred"],
               'context_size': config["context_size"],
               'visualize': False,
