@@ -191,12 +191,13 @@ def main(config):
                             data_dir=TFDS_DATA_DIR, version=version)
                     train_dataloaders.append(train_dataloader)
                     train_dataloader_names.append(dataset)
-
-                splits = ['train[:2%]', 'train[50%:52%]']
+                
+                if dataset == "m3ed_dataset":
+                    splits = ['train', 'train']
+                else:
+                    splits = ['train[:2%]', 'train[50%:52%]']
                 val_dataloader_splits = []
                 for split in splits:
-                    print(split)
-                    breakpoint()
                     val_split, val_meta = make_dataloader(dataset, split, dataloader_config,
                         data_dir=TFDS_DATA_DIR, validation=True)
                     val_dataloader_splits.append(val_split)
