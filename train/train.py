@@ -492,6 +492,7 @@ if __name__ == "__main__":
             project=config["project_name"],
             settings=wandb.Settings(start_method="fork"),
             entity="catglossop", # TODO: change this to your wandb entity
+            dir="/glboal/scratch/users/catherineglossop/omnimimic/wandb"
         )
         wandb.save(args.config, policy="now")  # save the config file
         wandb.run.name = config["run_name"]
