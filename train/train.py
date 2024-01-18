@@ -195,6 +195,8 @@ def main(config):
                 splits = ['train[:2%]', 'train[50%:52%]']
                 val_dataloader_splits = []
                 for split in splits:
+                    print(split)
+                    breakpoint()
                     val_split, val_meta = make_dataloader(dataset, split, dataloader_config,
                         data_dir=TFDS_DATA_DIR, validation=True)
                     val_dataloader_splits.append(val_split)
