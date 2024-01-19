@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=savio4_gpu
+#SBATCH --partition=savio4_htc
 #SBATCH --account=co_rail
 #SBATCH --time=5-00:00:00
 #SBATCH --nodes=1
