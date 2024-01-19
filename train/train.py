@@ -175,7 +175,7 @@ def main(config):
               'num_bins': 0,
               'gnm_delta_actions': True, 
               'num_trajectories': None,
-              'gnm_dataset': 'seattle',
+              'gnm_dataset': 'scand',
               }
         with tf.device('/cpu'):
             for dataset in datasets:
