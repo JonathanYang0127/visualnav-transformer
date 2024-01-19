@@ -4,7 +4,7 @@
 #SBATCH --time=5-00:00:00
 #SBATCH --mem=200G
 #SBATCH --job-name=catjob
-#SBATCH --qos=rail_gpu4_normal
+#SBATCH --qos=rail_gpu3_normal
 #SBATCH --cpus-per-task=12
 #SBATCH --gres=gpu:1
 #SBATCH --job-name="cglossop_omni"
