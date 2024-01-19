@@ -175,7 +175,7 @@ def main(config):
               'num_bins': 0,
               'gnm_delta_actions': True, 
               'num_trajectories': None,
-              'gnm_dataset': 'all',
+              'gnm_dataset': 'sacson',
               }
         with tf.device('/cpu'):
             for dataset in datasets:
@@ -492,7 +492,7 @@ if __name__ == "__main__":
             project=config["project_name"],
             settings=wandb.Settings(start_method="fork"),
             entity="catglossop", # TODO: change this to your wandb entity
-            dir="/glboal/scratch/users/catherineglossop/omnimimic/wandb"
+            dir="/global/scratch/users/catherineglossop/omnimimic/wandb"
         )
         wandb.save(args.config, policy="now")  # save the config file
         wandb.run.name = config["run_name"]
