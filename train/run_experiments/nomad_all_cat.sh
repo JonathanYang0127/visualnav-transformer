@@ -6,7 +6,7 @@
 #SBATCH --job-name=catjob
 #SBATCH --qos=rail_gpu3_normal
 #SBATCH --cpus-per-task=12
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:TITAN:1
 #SBATCH --job-name="cglossop_omni"
 #SBATCH --output=/global/scratch/users/catherineglossop/omnimimic/outputs/exp-%j.out
 
