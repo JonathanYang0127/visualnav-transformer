@@ -1,6 +1,6 @@
 project_name: nomad_all
 run_name: nomad_all
-load_run: nomad_all/nomad_all_2024_01_18_13_24_12
+# load_run: nomad_all/nomad_all_2024_01_18_13_24_12
 
 # training setup
 use_wandb: True # set to false if you don't want to log to wandb
