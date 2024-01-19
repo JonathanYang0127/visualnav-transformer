@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=savio4_gpu
 #SBATCH --account=co_rail
-#SBATCH --time=5-00:00:00
+#SBATCH --time=2-00:00:00
 #SBATCH --mem=200G
 #SBATCH --job-name=catjob
 #SBATCH --qos=rail_gpu4_normal
