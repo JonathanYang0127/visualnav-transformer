@@ -15,7 +15,7 @@ cd /global/home/users/catherineglossop/visualnav-transformer/train
 conda activate /global/scratch/users/catherineglossop/miniconda3/omni
 export NCCL_P2P_DISABLE=1
 
-python train.py -c config/vint_vint_all.yaml --use-rlds --datasets all
+python train.py -c config/vint_all.yaml --use-rlds --datasets all
 
 #done
 
