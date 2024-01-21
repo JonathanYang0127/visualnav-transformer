@@ -91,7 +91,6 @@ def _compute_losses(
         results["action_orien_cos_sim"] = action_orien_cos_sim
         results["multi_action_orien_cos_sim"] = multi_action_orien_cos_sim
         '''
-    print(dist_loss, action_loss)
     total_loss = alpha * 1e-3 * dist_loss + (1 - alpha) * action_loss
     results["total_loss"] = total_loss
 
