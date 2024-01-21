@@ -70,7 +70,7 @@ def _compute_losses(
     ))
 
     results = {
-        "dist_loss": dist_loss,
+        "dist_loss": dist_loss.to(float32),
         "action_loss": action_loss,
         "action_waypts_cos_sim": action_waypts_cos_similairity,
         "multi_action_waypts_cos_sim": multi_action_waypts_cos_sim,
@@ -91,6 +91,7 @@ def _compute_losses(
         results["action_orien_cos_sim"] = action_orien_cos_sim
         results["multi_action_orien_cos_sim"] = multi_action_orien_cos_sim
         '''
+    print(dist_loss, action_loss)
     total_loss = alpha * 1e-3 * dist_loss + (1 - alpha) * action_loss
     results["total_loss"] = total_loss
 
@@ -232,7 +233,6 @@ def train(
         loggers["multi_action_orien_cos_sim"] = multi_action_orien_cos_sim_logger
 
     num_batches = len(dataloader)
-    print(num_batches)
     tqdm_iter = tqdm.tqdm(
         dataloader,
         disable=not use_tqdm,
@@ -262,7 +262,7 @@ def train(
         model_outputs = model(obs_image, goal_image)
 
         dist_label = dist_label.to(device)
-        action_label = action_label.to(device)
+        action_label = action_label.to(torch.float32).to(device)
         action_mask = action_mask.to(device)
 
         optimizer.zero_grad()
@@ -634,7 +634,7 @@ def train_nomad(
             naction = from_numpy(ndeltas).to(device)
             assert naction.shape[-1] == 2, "action dim must be 2"
             '''
-            naction = actions.to(torch.float32).to(device)
+            naction = actions.to(device)
 
             # Predict distance
             dist_pred = model("dist_pred_net", obsgoal_cond=obsgoal_cond)
