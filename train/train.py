@@ -174,9 +174,9 @@ def main(config):
               'discrete': False,
               'num_bins': 0,
               'gnm_delta_actions': True, 
-              'num_trajectories': {"outdoor_wild": 100, "outdoor_urban": 5000, "indoor": 5000},
-            #   'num_trajectories': None,
-              'gnm_dataset': 'all',
+            #   'num_trajectories': {"outdoor_wild": 100, "outdoor_urban": 5000, "indoor": 5000},
+              'num_trajectories': None,
+              'gnm_dataset': 'seattle',
               }
         with tf.device('/cpu'):
             for dataset in datasets:
