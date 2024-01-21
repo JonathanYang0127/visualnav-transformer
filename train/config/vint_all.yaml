@@ -6,7 +6,7 @@ use_wandb: True # set to false if you don't want to log to wandb
 train: True
 batch_size: 256
 epochs: 1000
-gpu_ids: [0, 1]
+gpu_ids: [0]
 num_workers: 12
 lr: 5e-4
 optimizer: adamw
@@ -23,14 +23,15 @@ seed: 0
 # model params
 model_type: vint
 obs_encoder: "efficientnet-b5" # by default, this is imagenet pretrained
-obs_encoding_size: 1024
-mha_num_attention_heads: 16
-mha_num_attention_layers: 16
-mha_ff_dim_factor: 16
+obs_encoding_size: 256
+mha_num_attention_heads: 8
+mha_num_attention_layers: 8
+mha_ff_dim_factor: 8
 late_fusion: False
 
 # normalization for the action space
-normalize: False
+normalize: True
+goal_mask_prob: 0.5
 
 # context
 context_type: temporal
@@ -43,12 +44,12 @@ distance:
   min_dist_cat: 0
   max_dist_cat: 20
 action:
-  min_dist_cat: 0
-  max_dist_cat: 10
+  min_dist_cat: 3
+  max_dist_cat: 20
 close_far_threshold: 10 # distance threshold used to seperate the close and the far  subgoals that are sampled per datapoint
 
 # action output params
-len_traj_pred: 5
+len_traj_pred: 8
 learn_angle: False #True
 
 # dataset specific parameters
