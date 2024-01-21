@@ -22,11 +22,11 @@ seed: 0
 
 # model params
 model_type: vint
-obs_encoder: "efficientnet-b0" # by default, this is imagenet pretrained
+obs_encoder: "efficientnet-b3" # by default, this is imagenet pretrained
 obs_encoding_size: 256
-mha_num_attention_heads: 8
-mha_num_attention_layers: 8
-mha_ff_dim_factor: 8
+mha_num_attention_heads: 16
+mha_num_attention_layers: 16
+mha_ff_dim_factor: 16
 late_fusion: False
 
 # normalization for the action space
