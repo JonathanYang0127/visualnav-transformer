@@ -174,7 +174,7 @@ def main(config):
               'discrete': False,
               'num_bins': 0,
               'gnm_delta_actions': True, 
-              'num_trajectories': {"outdoor_wild": 1000, "outdoor_urban": 5000, "indoor": 5000},
+              'num_trajectories': {"outdoor_wild": 500, "outdoor_urban": 5000, "indoor": 5000},
             #   'num_trajectories': None,
               'gnm_dataset': 'all',
               }
