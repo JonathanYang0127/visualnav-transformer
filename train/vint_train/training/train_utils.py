@@ -70,7 +70,7 @@ def _compute_losses(
     ))
 
     results = {
-        "dist_loss": dist_loss.to(float32),
+        "dist_loss": dist_loss.to(torch.float32),
         "action_loss": action_loss,
         "action_waypts_cos_sim": action_waypts_cos_similairity,
         "multi_action_waypts_cos_sim": multi_action_waypts_cos_sim,
