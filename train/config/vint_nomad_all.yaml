@@ -31,7 +31,7 @@ cond_predict_scale: False
 mha_num_attention_heads: 8
 mha_num_attention_layers: 8
 mha_ff_dim_factor: 8
-down_dims: [128, 256, 512, 1024]
+down_dims: [256, 512, 1024, 2048]
 
 # diffusion model params
 num_diffusion_iters: 10
