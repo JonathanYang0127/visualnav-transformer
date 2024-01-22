@@ -1,5 +1,6 @@
 project_name: vint-all
 run_name: vint-5c
+load_run: vint-all/vint-5c_2024_01_21_16_38_06
 
 # training setup
 use_wandb: True # set to false if you don't want to log to wandb

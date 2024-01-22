@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --partition=savio4_gpu
 #SBATCH --account=co_rail
-#SBATCH --time=1-12:00:00
+#SBATCH --time=1-20:00:00
 #SBATCH --job-name=catjob
 #SBATCH --qos=rail_gpu4_normal
-#SBATCH --cpus-per-task=8
-#SBATCH --mem=150G
+#SBATCH --cpus-per-task=10
+#SBATCH --mem=175G
 #SBATCH --gres=gpu:A5000:1
 #SBATCH --job-name="cglossop_omni"
 #SBATCH --output=/global/scratch/users/catherineglossop/omnimimic/outputs/exp-%j.out
