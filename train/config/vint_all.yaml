@@ -1,11 +1,11 @@
 project_name: vint-all
 run_name: vint-5c
-load_run: vint-all/vint-5c_2024_01_21_16_38_06
+load_run: vint-all/vint-5c_2024_01_21_14_53_27
 
 # training setup
 use_wandb: True # set to false if you don't want to log to wandb
 train: True
-batch_size: 64
+batch_size: 100
 epochs: 1000
 gpu_ids: [0]
 num_workers: 12
@@ -24,7 +24,7 @@ seed: 0
 # model params
 model_type: vint
 obs_encoder: "efficientnet-b5" # by default, this is imagenet pretrained
-obs_encoding_size: 400
+obs_encoding_size: 256
 mha_num_attention_heads: 16
 mha_num_attention_layers: 16
 mha_ff_dim_factor: 16
