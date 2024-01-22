@@ -1,6 +1,6 @@
 project_name: nomad_all
 run_name: nomad_all
-load_run: nomad_all/nomad_all_2024_01_20_21_34_42
+# load_run: nomad_all/nomad_all_2024_01_20_21_34_42
 
 # training setup
 use_wandb: True # set to false if you don't want to log to wandb
@@ -31,7 +31,7 @@ cond_predict_scale: False
 mha_num_attention_heads: 8
 mha_num_attention_layers: 8
 mha_ff_dim_factor: 8
-down_dims: [256, 512, 1024, 2048]
+down_dims: [256, 512, 1024]
 
 # diffusion model params
 num_diffusion_iters: 10
