@@ -5,7 +5,7 @@
 #SBATCH --job-name=catjob
 #SBATCH --qos=rail_gpu4_normal
 #SBATCH --cpus-per-task=8
-#SBATCH --mem=130G
+#SBATCH --mem=100G
 #SBATCH --gres=gpu:A5000:1
 #SBATCH --job-name="cglossop_omni"
 #SBATCH --output=/global/scratch/users/catherineglossop/omnimimic/outputs/exp-%j.out
