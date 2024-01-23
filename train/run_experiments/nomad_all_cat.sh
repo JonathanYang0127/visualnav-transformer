@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=savio4_gpu
 #SBATCH --account=co_rail
-#SBATCH --time=1-12:00:00
+#SBATCH --time=1-05:00:00
 #SBATCH --job-name=catjob
 #SBATCH --qos=rail_gpu4_normal
 #SBATCH --cpus-per-task=8
