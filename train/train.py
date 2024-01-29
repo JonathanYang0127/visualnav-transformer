@@ -176,7 +176,7 @@ def main(config):
               'gnm_delta_actions': True, 
             #   'num_trajectories': {"outdoor_wild": 100, "outdoor_urban": 5000, "indoor": 5000},
               'num_trajectories': None,
-              'gnm_dataset': 'sacson',
+              'gnm_dataset': 'go_stanford',
               }
         with tf.device('/cpu'):
             for dataset in datasets:
